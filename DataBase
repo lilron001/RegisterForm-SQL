@@ -1,0 +1,42 @@
+
+CREATE DATABASE CS_Student;
+
+USE CS_Student
+
+CREATE TABLE StudentInformation (
+
+        StudentId INT IDENTITY (1,1) PRIMARY KEY,
+
+        FirstName VARCHAR (100),
+
+        LastName VARCHAR (100),
+
+		Course VARCHAR (50),
+
+		YearLevel VARCHAR (50),
+
+        Section VARCHAR (50)
+);
+
+SELECT TOP (1000) 
+
+           [StudentId], 
+
+           [FirstName],
+
+           [LastName],
+
+           [Course],
+
+		   [YearLevel],
+
+		   [Section]
+
+  FROM [CS_Student].[dbo].[StudentInformation]
+
+
+  SELECT * FROM StudentInformation
+
+  INSERT INTO [CS_Student].[dbo].[StudentInformation] (FirstName, LastName, Course, YearLevel, Section)
+
+VALUES ('Christ', 'Celisyo', 'CCS', '1', 'A')
