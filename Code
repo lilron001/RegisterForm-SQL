@@ -1,0 +1,130 @@
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Runtime.Intrinsics.Arm;
+
+namespace Trial
+{
+    public partial class Form1 : Form
+    {
+
+        public string connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=CS_Student;Integrated Security=True";
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+           /* connection.Open();
+            string query = "SELECT * FROM dbo.students";
+            MySqlCommand cmd = MySqlCommand(query, connection);
+           */
+
+        }
+
+
+        public class RegistrationData
+        {
+            public string FirstName { set; get; }
+            public string LastName { set; get; }
+            public string CourseName { set; get; }
+            public string YearLevel { set; get; }
+            public string Section { set; get; }
+        }
+        public static RegistrationData GetRegistrationData(TextBox firstNameInput, TextBox lastnameInput, TextBox courseInput, TextBox yearInput, TextBox sectionInput)
+        {
+            RegistrationData data = new RegistrationData();
+            data.FirstName = firstNameInput.Text;
+            data.LastName = lastnameInput.Text;
+            data.CourseName = courseInput.Text;
+            data.YearLevel = yearInput.Text;
+            data.Section = sectionInput.Text;
+
+            return data;
+        }
+
+   
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RegistrationData data = GetRegistrationData(textBox1, textBox2, textBox3, textBox4, textBox5);
+
+            SqlConnection con = new SqlConnection(connectionString);
+
+            con.Open();
+
+            if (con.State == System.Data.ConnectionState.Open)
+            {
+                MessageBox.Show("Connection Made!");
+
+                string insertQuery = "INSERT INTO [CS_Student].[dbo].[StudentInformation] (FirstName, LastName, Course, YearLevel, Section) VALUES (@FirstName, @LastName, @CourseName, @YearLevel, @Section)";
+
+                SqlCommand cmd = new SqlCommand(insertQuery, con);
+
+                cmd.Parameters.AddWithValue("@FirstName", SqlDbType.VarChar).Value = data.FirstName;
+                cmd.Parameters.AddWithValue("@LastName", SqlDbType.VarChar).Value = data.LastName;
+                cmd.Parameters.AddWithValue("@CourseName", SqlDbType.VarChar).Value = data.CourseName;
+                cmd.Parameters.AddWithValue("@YearLevel", SqlDbType.VarChar).Value = data.YearLevel;
+                cmd.Parameters.AddWithValue("@Section", SqlDbType.VarChar).Value = data.Section;
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show("Data inserted successfully!");
+                }
+                else
+                {
+                    MessageBox.Show("Failed to insert data!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Error connecting to Database!");
+            }
+
+        }
+    
+      /*  private void ViewStudent_Load(Object sender, EventArgs e)
+        {
+          //  oladData();
+        }
+
+        private void LoadData()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    string query = "SELECT * FROM [CS_Student].[dbo].[StudentInformation]";
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    registeredStudentsTable.DataSource = dataTable;
+
+                    registeredStudentsTable.CellClicl += RegisteredStudentsTable_CellClick;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error: " +ex.Message);
+            }
+        }
+      */
+      /*  private void RegisteredStudentsTable_CellClick(object sender, EventArgs e)
+        {
+            if(e.RowIndex >=0)
+            {
+                DataGridViewRow selectedrow = registeredStudentsTable.Rows[e.RowIndex];
+
+                string studentName = selectedrow.Cells["FirstName"].Value.ToString();
+
+                MessageBox.Show($"Selected Student: {studentName}");
+            }
+        }
+      */
+
+    }
+}
